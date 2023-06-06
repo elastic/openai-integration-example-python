@@ -1,10 +1,10 @@
-# Elastic OpenAI integration example
+# Elastic OpenAI integration example - Python
 
 ## Overview
 
-Small sample application for demonstrating an integration between Elastic and OpenAI.
+Small sample Python/Flask application for demonstrating integration between Elastic and OpenAI.
 
-Includes a tool for generating text embeddings with OpenAI on documents during indexing and a tiny webapp for running semantic search.
+Includes a tool for generating text embeddings with OpenAI on documents during indexing, and a tiny webapp for running semantic search. These both use the [Elasticsearch](https://github.com/elastic/elasticsearch-py) and [OpenAI](https://github.com/openai/openai-python) Python clients.
 
 ## Setup
 
@@ -25,7 +25,7 @@ This section will walk you through the steps for setting up and using the applic
 
 ![Elastic Cloud credentials](images/elastic_credentials.png)
 
-![Elastic Cloud credentials](images/elastic_cloud_id.png)
+![Elastic Cloud ID](images/elastic_cloud_id.png)
 
 ### 3. Create index
 
@@ -115,7 +115,7 @@ Starting Flask app
  * Debugger PIN: 706-281-587
 ```
 
-### 8. Run a semantic search in the web app
+### 8. Run semantic search in the web app
 
 * Open http://localhost:8080 in your browser
 * Enter a search query and press Search
