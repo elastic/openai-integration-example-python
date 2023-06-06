@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Elastic OpenAI integration - Python/Flask example</title>
+    <style>
+        body {
+            font-family: sans-serif;
+        }
+        table, th, td {
+            border: 1px solid;
+            border-collapse: collapse;
+            padding: 2px;
+        }
+        table {
+            border-spacing: 0px;
+        }
+        th {
+            text-align: left;
+        }
+    </style>
+    <script lang="javascript">
+        function search() {
+            const query = document.getElementById("query").value;
+
+            const searchUrl = new URL(`/search`, document.location);
+            searchUrl.searchParams.append('q', query);
+            
+            location.href = searchUrl.href;
+        }
+    </script>
+</head>
+<body>
+    <table>
+        <tr>
+            <th>
+                Search query
+            </th>
+            <td>
+                <input id="query" type="text" {% if query %} value="{{ query }}" {% endif %} style="width: 200px"/>
+                <input type="button" onclick="search()" value="Search"/>
+            </td>
+        </tr>
+    </table>
+    <hr/>
+    {% if query %}
+        <p>Results for <i>"{{ query }}"</i>:</p>
+        <table id="navigation">
+        <tr>
+            <th>Text</th>
+            <th>Relevance</th>
+        </tr>
+        {% for hit in hits %}
+            <tr>
+                <td>
+                    <b><a href="{{ hit.url }}">{{ hit.title }}</a></b><br/>{{ hit.content }}
+                </td>
+                <td>{{ hit.score }}</td>
+            </tr>
+        {% endfor %}
+        </table>
+    {% endif %}
+</body>
+</html>
