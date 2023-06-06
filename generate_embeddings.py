@@ -1,7 +1,7 @@
 from elasticsearch import Elasticsearch, helpers
+from openai import Embedding
 import json
 import os
-import requests
 
 FILE = 'sample_data/medicare.json'
 INDEX = 'openai-integration'
@@ -33,24 +33,16 @@ def bulk_index_docs(docs, es_client):
 
 
 def generate_embeddings_with_openai(docs):
-    print(f'Calling OpenAI API for {len(docs)} embeddings with model {MODEL}')
-
     input = [doc['content'] for doc in docs]
-    url = 'https://api.openai.com/v1/embeddings'
-    headers = {
-        'Authorization': f'Bearer {OPENAI_API_TOKEN}',
-        'Content-Type': 'application/json'
-    }
-    body = {
-        'input': input,
-        'model': MODEL
-    }
 
-    response = requests.post(url, json=body, headers=headers)
-    if response.ok:
-        return [data['embedding'] for data in response.json()['data']]
-    else:
-        raise Exception('Error while using OpenAI API: ' + response.json()['error']['message'])
+    print(f'Calling OpenAI API for {len(input)} embeddings with model {MODEL}')
+
+    try:
+        result = Embedding.create(engine=MODEL, input=input)
+        return [data['embedding'] for data in result['data']]
+    except Exception as e:
+        print(f'Error while using OpenAI API: {e}')
+        exit(1)
 
 
 def process_file():

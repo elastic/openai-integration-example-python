@@ -1,6 +1,6 @@
 from elasticsearch import Elasticsearch
 from flask import Flask, render_template, request
-import requests
+from openai import Embedding
 import os
 
 global OPTIONS
@@ -39,22 +39,15 @@ def route_search():
     return render_template('search.html', query=query, hits=hits)
 
 
-def generate_embedding_with_openai(text):
-    url = 'https://api.openai.com/v1/embeddings'
-    headers = {
-        'Authorization': f'Bearer {OPENAI_API_TOKEN}',
-        'Content-Type': 'application/json'
-    }
-    body = {
-        'input': text,
-        'model': MODEL
-    }
-    response = requests.post(url, json=body, headers=headers)
+def generate_embeddings_with_openai(text):
+    print(f'Calling OpenAI API for embedding with model {MODEL}')
 
-    if not response.ok:
-        raise Exception('Error while using OpenAI API: ' + response.json()['error']['message'])
-
-    return response.json()['data'][0]['embedding']
+    try:
+        result = Embedding.create(engine=MODEL, input=text)
+        return result['data'][0]['embedding']
+    except Exception as e:
+        print(f'Error while calling OpenAI API: {e}')
+        exit(1)
 
 
 def run_semantic_search(query):
@@ -62,7 +55,7 @@ def run_semantic_search(query):
         raise Exception('Missing query')
 
     # Generate OpenAI embedding for query
-    embedding = generate_embedding_with_openai(query)
+    embedding = generate_embeddings_with_openai(query)
     knn = {
         'field': 'embedding',
         'query_vector': embedding,
