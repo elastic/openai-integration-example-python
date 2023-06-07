@@ -40,7 +40,7 @@ def route_search():
 
 
 def generate_embeddings_with_openai(text):
-    print(f'Calling OpenAI API for embedding with model {MODEL}')
+    print(f'Calling OpenAI API to apply embedding on text "{text}" with model {MODEL}')
 
     try:
         result = Embedding.create(engine=MODEL, input=text)
@@ -74,4 +74,4 @@ if __name__ == '__main__':
 
     print(f'Starting Flask app')
 
-    app.run(host='127.0.0.1', port=8080, debug=True)
+    app.run(host='127.0.0.1', port=8080)

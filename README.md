@@ -69,15 +69,10 @@ python search_app.py
 Connecting to Elastic Cloud: my-openai-integration-test:dXMt(...)
 Starting Flask app
  * Serving Flask app 'search_app'
- * Debug mode: on
+ * Debug mode: off
 WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
  * Running on http://127.0.0.1:8080
 Press CTRL+C to quit
- * Restarting with stat
-Connecting to Elastic Cloud: my-openai-integration-test:dXMt(...)
-Starting Flask app
- * Debugger is active!
- * Debugger PIN: 706-281-587
 ```
 
 ### 7. Run semantic search in the web app
