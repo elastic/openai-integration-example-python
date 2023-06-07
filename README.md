@@ -27,50 +27,13 @@ This section will walk you through the steps for setting up and using the applic
 
 ![Elastic Cloud ID](images/elastic_cloud_id.png)
 
-### 3. Create index
-
-* Open Kibana and navigate to Dev Tools
-* Run the following command in the Dev Tools console:
-
-```json
-PUT openai-integration
-{
-  "mappings": {
-    "properties": {
-      "url": {
-        "type": "keyword"
-      },
-      "title": {
-        "type": "text",
-        "analyzer": "english"
-      },
-      "content": {
-        "type": "text",
-        "analyzer": "english"
-      },
-      "embedding": {
-        "type": "dense_vector",
-        "dims": 1536,
-        "index": true,
-        "similarity": "cosine"
-      }
-    }
-  }
-}
-```
- 
-_**Note**: the sample application uses the `text-embedding-ada-002` OpenAI model for generating the embeddings, which provides a 1536-dimensional vector output. See [this section](#using-a-different-openai-model) if you want to use a different model._
-
-_**Note**: both the generator script and the web app assume that the source documents contain `url`, `title` and `content` fields. `url` is used as the ID and embeddings are applied on `content` only. See [this section](#using-a-different-source-file-or-document-mapping) if you want to use a different mapping._
-
-
-### 4. Install Python dependencies
+### 3. Install Python dependencies
 
 ```sh
 pip install -r requirements.txt
 ```
 
-### 5. Set environment variables
+### 4. Set environment variables
 
 ```sh
 export ELASTIC_CLOUD_ID=<your Elastic cloud ID>
@@ -79,7 +42,7 @@ export ELASTIC_PASSWORD=<your Elastic password>
 export OPENAI_API_KEY=<your OpenAI API key>
 ```
 
-### 6. Generate embeddings and index documents
+### 5. Generate embeddings and index documents
 
 ```sh
 python generate_embeddings.py
@@ -96,7 +59,9 @@ Indexing 2 documents to index openai-integration...
 Processing complete
 ```
 
-### 7. Launch web app
+_**Note**: the sample application uses the `text-embedding-ada-002` OpenAI model for generating the embeddings, which provides a 1536-dimensional vector output. See [this section](#using-a-different-openai-model) if you want to use a different model._
+
+### 6. Launch web app
 
 ```sh
 python search_app.py
@@ -115,7 +80,7 @@ Starting Flask app
  * Debugger PIN: 706-281-587
 ```
 
-### 8. Run semantic search in the web app
+### 7. Run semantic search in the web app
 
 * Open http://localhost:8080 in your browser
 * Enter a search query and press Search
@@ -134,8 +99,7 @@ Here are some tips for modifying the code in case your use case differs from the
 ### Using a different source file or document mapping
 
 * Ensure your file contains the documents in JSON format
-* Ensure your index has matching mappings and an `embeddings` field
-* Modify the document fields in the `.py` files and in `templates/search.html`
+* Modify the document mappings and fields in the `.py` files and in `templates/search.html`
 * Modify the initialization of `FILE` in `generate_embeddings.py` 
 
 ### Using a different Elastic index
