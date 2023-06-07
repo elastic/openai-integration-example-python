@@ -12,6 +12,48 @@ ELASTIC_PASSWORD = os.getenv('ELASTIC_PASSWORD')
 OPENAI_API_TOKEN = os.getenv('OPENAI_API_TOKEN')
 
 
+def maybe_create_index(es_client: Elasticsearch):
+    if es_client.indices.exists(index=INDEX):
+        return
+
+    print(f'Creating index {INDEX}...')
+
+    try:
+        es_client.indices.create(
+            index=INDEX,
+            settings={
+                "index": {
+                    "number_of_shards": 1,
+                    "number_of_replicas": 1
+                }
+            },
+            mappings={
+                "properties": {
+                    "url": {
+                        "type": "keyword"
+                    },
+                    "title": {
+                        "type": "text",
+                        "analyzer": "english"
+                    },
+                    "content": {
+                        "type": "text",
+                        "analyzer": "english"
+                    },
+                    "embedding": {
+                        "type": "dense_vector",
+                        "dims": 1536,
+                        "index": True,
+                        "similarity": "cosine"
+                    }
+                }
+            }
+        )
+    except Exception as e:
+        print(f'Error while creating index: {e}')
+        exit(1)
+
+
 def bulk_index_docs(docs, es_client):
     actions = []
     for doc in docs:
@@ -79,4 +121,5 @@ if __name__ == "__main__":
 
     es_client = Elasticsearch(cloud_id=ELASTIC_CLOUD_ID, basic_auth=(ELASTIC_USERNAME, ELASTIC_PASSWORD))
 
+    maybe_create_index(es_client)
     process_file()
